@@ -179,12 +179,18 @@ const tmpSurveys = [
 ]
 
 export const ContextProvider = ({children}) => {
-  const [currentUser, setCurrentUser] = useState({
-    name: 'Tom Cook',
-    email: 'tom@example.com',
-  });
-  const [userToken, setUserToken] = useState('7856');
+  const [currentUser, setCurrentUser] = useState({});
+  const [userToken, _setUserToken] = useState(localStorage.getItem('TOKEN'||''));
   const [surveys, setSurveys] = useState(tmpSurveys);
+
+  const setUserToken = (token) => {
+    _setUserToken(token);
+    if (token) {
+      localStorage.setItem('TOKEN', token);
+    } else {
+      localStorage.removeItem('TOKEN');
+    }
+  }
 
   return (
     <StateContext.Provider value={{

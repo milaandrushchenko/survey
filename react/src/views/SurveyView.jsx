@@ -2,8 +2,13 @@ import PageComponent from "../components/PageComponent.jsx";
 import {useState} from "react";
 import {PhotoIcon} from "@heroicons/react/20/solid/index.js";
 import TButton from "../components/core/TButton.jsx";
+import axiosClient from "../axios.js";
+import {useNavigate} from "react-router-dom";
 
 export default function SurveyView() {
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
+
   const [survey, setSurvey] = useState({
     title: "",
     slug: "",
@@ -15,19 +20,53 @@ export default function SurveyView() {
     questions: [],
   });
 
-  const onImageChoose=()=>{
-    console.log("On image choose");
+  const onImageChoose = (e) => {
+    let file = e.target.files[0];
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setSurvey({
+        ...survey,
+        image: file,
+        image_url: reader.result,
+      })
+
+      e.target.value = '';
+    }
+    reader.readAsDataURL(file);
   }
 
-  const onSubmit=(e)=>{
+  const onSubmit = (e) => {
     e.preventDefault();
-    console.log(e);
+
+    const payload = {...survey};
+    if (payload.image) {
+      payload.image = payload.image_url;
+    }
+    delete payload.image_url;
+    axiosClient.post('survey', payload)
+      .then(res => {
+        console.log(res);
+        navigate('/surveys');
+      })
+      .catch((err) => {
+        if (err && err.response) {
+          const error = err.response.data.message;
+          setError(error);
+        }
+        console.log(err, err.response);
+      });
   }
   return (
     <PageComponent title="Create new Survey">
       <form action="#" method="POST" onSubmit={onSubmit}>
         <div className="shadow sm:overflow-hidden sm:rounded-md">
           <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+            {error &&
+              <div className="bg-red-500 text-white py-3 px-3">
+                {error}
+              </div>
+            }
             {/*Image*/}
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -121,7 +160,9 @@ export default function SurveyView() {
                 onChange={(ev) =>
                   setSurvey({...survey, expire_date: ev.target.value})
                 }
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                className="mt-1 block w-full rounded-md border-gray-300
+                shadow-sm focus:border-indigo-500 focus:ring-indigo-500
+                sm:text-sm"
               />
             </div>
             {/*Expire Date*/}

@@ -13,16 +13,22 @@ class Survey extends Model
     use HasSlug;
 
     protected $fillable = [
-        'title', 'description', 'expire_date','image','user_id', 'status',
+        'title', 'description', 'expire_date', 'image', 'user_id', 'status',
         'created_at', 'updated_at'
     ];
-     /**
+
+    /**
      * Get the options for generating the slug.
      */
-    public function getSlugOptions() : SlugOptions
+    public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
             ->generateSlugsFrom('title')
             ->saveSlugsTo('slug');
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(SurveyQuestion::class);
     }
 }

@@ -9,7 +9,7 @@ use App\Models\Survey;
 use App\Http\Requests\StoreSurveyRequest;
 use App\Http\Requests\UpdateSurveyRequest;
 use App\Models\SurveyQuestion;
-use GuzzleHttp\Psr7\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -27,9 +27,10 @@ class SurveyController extends Controller
     {
         $user = $request->user();
 
-        return SurveyResource::collection(Survey::where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(10)
+        return SurveyResource::collection(
+            Survey::where('user_id', $user->id)
+                ->orderBy('created_at', 'desc')
+                ->paginate(2)
         );
     }
 
@@ -126,7 +127,7 @@ class SurveyController extends Controller
      * @param \App\Models\Survey $survey
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Survey $survey , Request $request)
+    public function destroy(Survey $survey, Request $request)
     {
         $user = $request->user();
         if ($user->id !== $survey->user_id) {
@@ -138,7 +139,7 @@ class SurveyController extends Controller
             File::delete($absolutePath);
         }
 
-        return response('',204);
+        return response('', 204);
     }
 
     private function saveImage($image)

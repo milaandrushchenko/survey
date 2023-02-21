@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Enums\QuestionTypeEnum;
 use App\Http\Resources\SurveyResource;
 use App\Models\Survey;
@@ -48,8 +49,7 @@ class SurveyController extends Controller
         }
 
         $survey = Survey::create($data);
-        return new SurveyResource($survey);
-        foreach ($data['question'] as $question) {
+        foreach ($data['questions'] as $question) {
             $question['survey_id'] = $survey->id;
             $this->createQuestion($question);
         }
@@ -184,7 +184,7 @@ class SurveyController extends Controller
         $validator = Validator::make($data, [
             'question' => 'required|string',
             'type' => [
-                'required', new Enum(QuestionTypeEnum::class)
+                'required', new  Enum(QuestionTypeEnum::class)
             ],
             'description' => 'nullable|string',
             'data' => 'present',

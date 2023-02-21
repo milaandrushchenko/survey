@@ -4,6 +4,8 @@ import {PhotoIcon} from "@heroicons/react/20/solid/index.js";
 import TButton from "../components/core/TButton.jsx";
 import axiosClient from "../axios.js";
 import {useNavigate} from "react-router-dom";
+import SurveyQuestions from "../components/SurveyQuestions.jsx";
+import {v4 as uuidv4} from "uuid";
 
 export default function SurveyView() {
   const navigate = useNavigate();
@@ -19,6 +21,17 @@ export default function SurveyView() {
     expire_date: "",
     questions: [],
   });
+
+  const addQuestion = () => {
+    survey.questions.push({
+      id: uuidv4(),
+      type: "text",
+      question: "",
+      description: "",
+      data: {},
+    });
+    setSurvey({...survey});
+  };
 
   const onImageChoose = (e) => {
     let file = e.target.files[0];
@@ -57,6 +70,12 @@ export default function SurveyView() {
         console.log(err, err.response);
       });
   }
+
+  const onQuestionsUpdate = (questions) => {
+    setSurvey({...survey, questions});
+
+  }
+
   return (
     <PageComponent title="Create new Survey">
       <form action="#" method="POST" onSubmit={onSubmit}>
@@ -195,13 +214,13 @@ export default function SurveyView() {
             </div>
             {/*Active*/}
 
-            {/*<button type="button" onClick={addQuestion}>
+            <button type="button" onClick={addQuestion}>
               Add question
             </button>
             <SurveyQuestions
               questions={survey.questions}
               onQuestionsUpdate={onQuestionsUpdate}
-            />*/}
+            />
           </div>
           <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
             <TButton>Save</TButton>

@@ -6,6 +6,7 @@ import {PlusCircleIcon} from "@heroicons/react/24/outline/index.js";
 import {useEffect, useState} from "react";
 import axiosClient from "../axios.js";
 import PaginationLinks from "../components/PaginationLinks.jsx";
+import router from "../router.jsx";
 
 export default function Surveys() {
   /*
@@ -16,8 +17,12 @@ export default function Surveys() {
   const [loading, setLoading] = useState(false);
   console.log(surveys);
 
-  const onDeleteClick = () => {
-    console.log("On Delete click");
+  const onDeleteClick = (id) => {
+    if (window.confirm('Are you sure to want to delete this survey?'))
+      axiosClient.delete(`/survey/${id}`)
+        .then(() => {
+          getSurveys();
+        });
   }
 
   const onPageClick = (link) => {

@@ -4,6 +4,7 @@ import {Bars3Icon, BellIcon, XMarkIcon, UserIcon} from '@heroicons/react/24/outl
 import {Navigate, NavLink, Outlet} from "react-router-dom";
 import {useStateContext} from "../contexts/ContexProvider.jsx";
 import axiosClient from "../axios.js";
+import Toast from "./Toast.jsx";
 
 /*const user = {
   name: 'Tom Cook',
@@ -177,6 +178,8 @@ export default function DefaultLayout() {
           )}
         </Disclosure>
         <Outlet/>
+
+        <Toast/>
       </div>
     </>
   )

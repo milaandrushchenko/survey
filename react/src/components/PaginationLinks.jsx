@@ -40,7 +40,7 @@ export default function PaginationLinks({meta, onPageClick}) {
           </p>
         </div>
         <div>
-          {meta.total >= 10 && <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm"
+          {meta.total > meta.per_page && <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm"
                aria-label="Pagination">
             {/* Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" */}
             {meta.links?.map((link, i) => (

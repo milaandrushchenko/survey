@@ -12,6 +12,7 @@ export default function Surveys() {
   /*
     const {surveys} = useStateContext();
   */
+  const {toast, showToast} = useStateContext();
   const [surveys, setSurveys] = useState([]);
   const [meta, setMeta] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,6 +23,7 @@ export default function Surveys() {
       axiosClient.delete(`/survey/${id}`)
         .then(() => {
           getSurveys();
+          showToast('The survey was deleted');
         });
   }
 
@@ -58,13 +60,19 @@ export default function Surveys() {
       </div>
       }
       {
-        !loading && <div>
+        !loading &&
+        <div>
+          {surveys.length === 0 &&
+            <div className="py-8 text-center test-gray-700">You don't have surveys created
+            </div>
+          }
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
+
             {surveys.map(survey => (
               <SurveyListItem survey={survey} key={survey.id} onDeleteClick={onDeleteClick}/>
             ))}
           </div>
-          <PaginationLinks meta={meta} onPageClick={onPageClick}/>
+          {surveys.length > 0 && <PaginationLinks meta={meta} onPageClick={onPageClick}/>}
         </div>
       }
     </PageComponent>

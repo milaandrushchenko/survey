@@ -142,6 +142,19 @@ class SurveyController extends Controller
         return response('', 204);
     }
 
+    public function getBySlug(Survey $survey)
+    {
+        if (!$survey->status){
+            return response('',404);
+        }
+        $currentDate = new \DateTime();
+        $expireDate = new \DateTime($survey->expire_date);
+        if ($currentDate > $expireDate){
+            return response('',404);
+        };
+        return new SurveyResource($survey);
+    }
+
     private function saveImage($image)
     {
         // Check if image is valid base64 string

@@ -7,6 +7,8 @@ import {useNavigate, useParams} from "react-router-dom";
 import SurveyQuestions from "../components/SurveyQuestions.jsx";
 import {v4 as uuidv4} from "uuid";
 import {useStateContext} from "../contexts/ContexProvider.jsx";
+import {PlusCircleIcon} from "@heroicons/react/24/outline/index.js";
+import {LinkIcon, TrashIcon} from "@heroicons/react/24/outline";
 
 export default function SurveyView() {
   const navigate = useNavigate();
@@ -91,6 +93,15 @@ export default function SurveyView() {
 
   }
 
+  const onDelete = () => {
+    /*  if (window.confirm('Are you sure to want to delete this survey?'))
+        axiosClient.delete(`/survey/${id}`)
+          .then(() => {
+            getSurveys();
+            showToast('The survey was deleted');
+          });*/
+  }
+
   useEffect(() => {
     if (id) {
       setLoading(true);
@@ -103,12 +114,27 @@ export default function SurveyView() {
   }, []);
 
   return (
-    <PageComponent title={!id ? "Create new Survey" : "Update Survey"}>
-      {loading && <div className="text-center text-lg">
-        Loading...
-      </div>
+    <PageComponent title={!id ? "Create new Survey" : "Update Survey"}
+                   buttons={
+                     <div className="flex gap-2">
+                       <TButton color="green" href={`/survey/public/${survey.slug}`}>
+                         <LinkIcon className="h-4 w-4"/>
+                         Public Link
+                       </TButton>
+                       <TButton color="red" onClick={onDelete}>
+                         <TrashIcon className="h-4 w-4 mr-2"/>
+                         Delete
+                       </TButton>
+                     </div>
+                   }
+    >
+      {
+        loading && <div className="text-center text-lg">
+          Loading...
+        </div>
       }
-      {!loading &&
+      {
+        !loading &&
         <form action="#" method="POST" onSubmit={onSubmit}>
           <div className="shadow sm:overflow-hidden sm:rounded-md">
             <div className="space-y-6 bg-white px-4 py-5 sm:p-6">

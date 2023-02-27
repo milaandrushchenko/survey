@@ -170,7 +170,7 @@ class SurveyController extends Controller
 
         foreach ($validated['answers'] as $questionId => $answer) {
             $question = SurveyQuestion::where(['id' => $questionId, 'survey_id' =>
-                $survey->id])->get;
+                $survey->id])->get();
             if (!$question) {
                 return response("Invalid question ID:\"$questionId\"", 400);
             }

@@ -6,6 +6,7 @@ import PublicQuestionView from "../components/PublicQuestionView.jsx";
 export default function SurveyPublicView() {
   const answers = {};
   const [survey, setSurvey] = useState({});
+  const [surveyFinished, setSurveyFinished] = useState(false);
   const [loading, setLoading] = useState(false);
   const {slug} = useParams();
 
@@ -28,7 +29,15 @@ export default function SurveyPublicView() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(answers );
+    console.log(answers);
+
+    axiosClient.post(`/survey/${survey.id}/answer`, {
+      answers
+    })
+      .then((response) => {
+        debugger;
+        setSurveyFinished(true);
+      });
   }
 
   return (
@@ -46,19 +55,28 @@ export default function SurveyPublicView() {
               <p className="text-gray-500 text-sm mb-3">{survey.description}</p>
             </div>
           </div>
+          {surveyFinished && (
+            <div className="py-8 px-6 bg-emerald-500 text-white w-[600px] mx-auto">
+              Thank you for participating in the survey
+            </div>
+          )}
+          {!surveyFinished && (
+            <>
+              <div>
+                {survey.questions?.map((question, index) => (
+                  <PublicQuestionView key={question.id} question={question} index={index}
+                                      answerChanged={val => answerChanged(question, val)}/>
+                ))}
+              </div>
+              <button
+                type="submit"
+                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Submit
+              </button>
+            </>
+          )}
 
-          <div>
-            {survey.questions?.map((question, index) => (
-              <PublicQuestionView key={question.id} question={question} index={index}
-                                  answerChanged={val => answerChanged(question, val)}/>
-            ))}
-          </div>
-          <button
-            type="submit"
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Submit
-          </button>
         </form>
       }
     </>

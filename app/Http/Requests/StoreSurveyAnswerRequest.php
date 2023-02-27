@@ -24,7 +24,7 @@ class StoreSurveyAnswerRequest extends FormRequest
     public function rules()
     {
         return [
-            'answer' => 'required|array'
+            'answers' => 'required|array'
         ];
     }
 }

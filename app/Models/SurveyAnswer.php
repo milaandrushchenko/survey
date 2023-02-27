@@ -9,8 +9,13 @@ class SurveyAnswer extends Model
 {
     use HasFactory;
 
-    const CREATED_AT =  null;
+    const CREATED_AT = null;
     const UPDATED_AT = null;
 
     protected $fillable = ['survey_id', 'start_date', 'end_date'];
+
+    public function belongsTo()
+    {
+        return $this->belongsTo(Survey::class);
+    }
 }
